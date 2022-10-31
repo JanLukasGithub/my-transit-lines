@@ -186,7 +186,7 @@ function initMyTransitLines() {
 	lonlat.transform(proj4326, projmerc);
 	
 	// center map to Hamburg
-	map.setCenter(lonlat, 13);
+	map.setCenter(lonlat, 9);
 	map.addControl(new OpenLayers.Control.ScaleLine({bottomOutUnits: '',maxWidth: 200, geodesic: true}));
 	
 	// load vector data from WKT string
