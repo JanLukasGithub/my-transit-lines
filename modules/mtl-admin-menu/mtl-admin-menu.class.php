@@ -37,11 +37,11 @@ class MtlSettingsPage
     {
         // Creates new menu point
         add_menu_page(
-            'My Transit Lines', 
-            'My Transit Lines', 
-            'manage_options', 
-            'mtl_settings_page', 
-            array( $this, 'mtl_submenu_page_intro' )
+            'My Transit Lines', 						// page title
+            'My Transit Lines', 						// menu title
+            'manage_options', 							// required capability
+            'mtl_settings_page', 						// slug (unique lower-case name)
+            array( $this, 'mtl_submenu_page_intro' ) 	// callback when page is accessed
         );
     }
 	
