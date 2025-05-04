@@ -9,6 +9,12 @@
 	--secondary-color:#e6137e;
 }
 
+@media (prefers-color-scheme: dark) {
+	:root {
+		background-color: black;
+	}
+}
+
 /* # general # */
 
 * {
