@@ -53,7 +53,7 @@ if(is_single() && get_post_type()=='mtlproposal') {
 		</nav><!-- #site-navigation -->
 		<div class="site-branding">
 			<?php $mtl_options3 = get_option('mtl-option-name3');
-			if($mtl_options3['mtl-main-logo']) { ?><div class="header-logo"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><img src="<?php echo $mtl_options3['mtl-main-logo']; ?>" alt="site logo" /></a></div><?php } ?>
+			if($mtl_options3['mtl-main-logo']) { ?><span class="header-logo"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><img src="<?php echo $mtl_options3['mtl-main-logo']; ?>" alt="<?php _e('site logo', 'my-transit-lines') ?>" /></a></span><?php } ?>
 			<h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
 			<h2 class="site-description"><span><?php bloginfo( 'description' ); ?></span></h2>
 		</div>

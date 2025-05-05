@@ -5,14 +5,12 @@
 /* root */
 
 :root {
+	color-scheme: light dark;
+
 	--primary-color:#00aeef;
 	--secondary-color:#e6137e;
-}
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		background-color: black;
-	}
+	background-color: light-dark(white, black);
 }
 
 /* # general # */
@@ -35,25 +33,28 @@ blockquote {
 	float: none;
 	width: auto;
 	left: 0;
-  }
+}
 
 /* basic font settings */
 html {
-	font-size:16px;
-	line-height:1.4em;
-	font-weight:normal;
-	color:#808080;
-	font-family:'Open Sans',Arial,Helvetica,sans-serif;
+	font-size: 16px;
+	line-height: 1.4em;
+	font-weight: normal;
+	color: gray;
+	font-family: 'Open Sans',Arial,Helvetica,sans-serif;
 }
 
 input,
 textarea,
 select,
 option {
-	font-family:inherit;
-	font-size:inherit;
-	line-height:inherit;
-	color:inherit;
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit;
+	color: inherit;
+
+	/* Force normal rendering of form elements that are not yet styleable */
+	color-scheme: light;
 }
 
 body, html {
@@ -62,8 +63,10 @@ body, html {
 }
 
 body {
-	text-align:center;
-	background:url('../images/linien.png') top center repeat-x;
+	text-align: center;
+	background:
+		linear-gradient(light-dark(transparent, color-mix(in srgb, black 80%, transparent))) center top / 100% 241px no-repeat,
+		url('../images/linien.png') top center repeat-x;
 }
 
 img {
@@ -108,8 +111,10 @@ h1, h2, h3, h4, h5, h6, h7, h8, h9 {
 
 /* basic setup for page, containing all content elements */
 #page {
-	padding:10px;
-	text-align:center;
+	--page-padding: 10px;
+
+	padding: var(--page-padding);
+	text-align: center;
 }
 
 /* # site header # */
@@ -124,29 +129,49 @@ header.site-header .site-branding {
 	margin:auto;
 }
 
-header.site-header div.header-logo {
-	margin-bottom:15px;
+header.site-header .header-logo a {
+	display: block;
 }
 
-header.site-header div.header-logo img {
-	max-width:70%;
-	background:white;
-	display:inline-block;
-	padding:15px;
+header.site-header .header-logo img {
+	--border-size: 15px;
+	--border-color: color-mix(in srgb, light-dark(white, black) 60%, transparent);
+
+	margin: calc(0px - var(--border-size));
+	max-width: 70%;
+
+	border: var(--border-size) solid transparent;
+	border-radius: var(--border-size);
+	background:
+		linear-gradient(var(--border-color), var(--border-color)) padding-box,
+		no-repeat left var(--border-size) / 100% calc(100% - (2 * var(--border-size))) linear-gradient(0.25turn, transparent, var(--border-color) var(--border-size), transparent var(--border-size), transparent calc(100% - var(--border-size)), var(--border-color) calc(100% - var(--border-size)), transparent 100%) border-box,
+		no-repeat var(--border-size) top / calc(100% - (2 * var(--border-size))) 100% linear-gradient(transparent, var(--border-color) var(--border-size), transparent var(--border-size), transparent calc(100% - var(--border-size)), var(--border-color) calc(100% - var(--border-size)), transparent 100%) border-box,
+		no-repeat left top / var(--border-size) var(--border-size) radial-gradient(var(--border-size) at right bottom, var(--border-color), transparent var(--border-size)) border-box,
+		no-repeat right top / var(--border-size) var(--border-size) radial-gradient(var(--border-size) at left bottom, var(--border-color), transparent var(--border-size)) border-box,
+		no-repeat left bottom / var(--border-size) var(--border-size) radial-gradient(var(--border-size) at right top, var(--border-color), transparent var(--border-size)) border-box,
+		no-repeat right bottom / var(--border-size) var(--border-size) radial-gradient(var(--border-size) at left top, var(--border-color), transparent var(--border-size)) border-box;
 }
 
 header.site-header h2.site-description {
-	font-size:135%;
-	margin-bottom:50px;
-	background:white;
-	text-transform:uppercase;
+	font-size: 135%;
+	margin-bottom: 50px;
+	text-transform: uppercase;
 }
 
-header.forkMeOnGithub {
-	position: absolute;
-	top: 0;
-	right: 0;
-	border: 0;
+header.site-header h2.site-description span {
+	--border-size: 15px;
+	--border-color: color-mix(in srgb, light-dark(white, black) 60%, transparent);
+
+	border: var(--border-size) solid transparent;
+	border-radius: var(--border-size);
+	background:
+		linear-gradient(var(--border-color), var(--border-color)) padding-box,
+		no-repeat left var(--border-size) / 100% calc(100% - (2 * var(--border-size))) linear-gradient(0.25turn, transparent, var(--border-color) var(--border-size), transparent var(--border-size), transparent calc(100% - var(--border-size)), var(--border-color) calc(100% - var(--border-size)), transparent 100%) border-box,
+		no-repeat var(--border-size) top / calc(100% - (2 * var(--border-size))) 100% linear-gradient(transparent, var(--border-color) var(--border-size), transparent var(--border-size), transparent calc(100% - var(--border-size)), var(--border-color) calc(100% - var(--border-size)), transparent 100%) border-box,
+		no-repeat left top / var(--border-size) var(--border-size) radial-gradient(var(--border-size) at right bottom, var(--border-color), transparent var(--border-size)) border-box,
+		no-repeat right top / var(--border-size) var(--border-size) radial-gradient(var(--border-size) at left bottom, var(--border-color), transparent var(--border-size)) border-box,
+		no-repeat left bottom / var(--border-size) var(--border-size) radial-gradient(var(--border-size) at right top, var(--border-color), transparent var(--border-size)) border-box,
+		no-repeat right bottom / var(--border-size) var(--border-size) radial-gradient(var(--border-size) at left top, var(--border-color), transparent var(--border-size)) border-box;
 }
 
 h1.site-title,
@@ -185,11 +210,26 @@ nav.main-navigation  li.current-page-ancestor a {
 	background:var(--secondary-color);
 }
 
-nav.top-navigation  {
-	max-width:900px;
-	text-align:right;
-	margin:0 auto 15px;
-	text-transform:uppercase;
+nav.top-navigation {
+	--border-size: 5px;
+	--border-color: color-mix(in srgb, light-dark(white, black) 60%, transparent);
+
+	max-width: 900px;
+	width: fit-content;
+	text-align: right;
+	margin: calc(0px - var(--border-size)) max(calc(50vw - 450px - var(--border-size) - var(--page-padding)), 0px) calc(15px - var(--border-size)) auto;
+	text-transform: uppercase;
+
+	border: var(--border-size) solid transparent;
+	border-radius: var(--border-size);
+	background:
+		linear-gradient(var(--border-color), var(--border-color)) padding-box,
+		no-repeat left var(--border-size) / 100% calc(100% - (2 * var(--border-size))) linear-gradient(0.25turn, transparent, var(--border-color) var(--border-size), transparent var(--border-size), transparent calc(100% - var(--border-size)), var(--border-color) calc(100% - var(--border-size)), transparent 100%) border-box,
+		no-repeat var(--border-size) top / calc(100% - (2 * var(--border-size))) 100% linear-gradient(transparent, var(--border-color) var(--border-size), transparent var(--border-size), transparent calc(100% - var(--border-size)), var(--border-color) calc(100% - var(--border-size)), transparent 100%) border-box,
+		no-repeat left top / var(--border-size) var(--border-size) radial-gradient(var(--border-size) at right bottom, var(--border-color), transparent var(--border-size)) border-box,
+		no-repeat right top / var(--border-size) var(--border-size) radial-gradient(var(--border-size) at left bottom, var(--border-color), transparent var(--border-size)) border-box,
+		no-repeat left bottom / var(--border-size) var(--border-size) radial-gradient(var(--border-size) at right top, var(--border-color), transparent var(--border-size)) border-box,
+		no-repeat right bottom / var(--border-size) var(--border-size) radial-gradient(var(--border-size) at left top, var(--border-color), transparent var(--border-size)) border-box;
 }
 
 nav.top-navigation aside {
@@ -204,21 +244,21 @@ nav.top-navigation h1.widget-title {
 }
 
 nav.top-navigation h1.widget-title strong {
-	font-weight:bold;
-	font-size:inherit;
-	color:black;
+	font-weight: bold;
+	font-size: inherit;
+	color: light-dark(black, lightgray);
 }
 
 nav.not-logged-in h1.widget-title {
 	display:none;
 }
 
-nav.top-navigation li {
-	display:inline;
-	padding-left:10px;
-	line-height:20px;
-	background:white;
-}	
+nav.top-navigation > li,
+nav.top-navigation > aside {
+	display: inline;
+	padding: 0px 5px;
+	line-height: 20px;
+}
 
 nav.top-navigation li a {
 	font-weight:bold;
@@ -229,7 +269,7 @@ nav.top-navigation li a {
 nav.top-navigation li a:hover,
 nav.top-navigation li a:active,
 nav.top-navigation li a:focus {
-	color:black;
+	color: light-dark(black, white);
 }
 
 nav.top-navigation  ul,  
@@ -408,9 +448,8 @@ body.blog #content .entry-thumbnail {
 
 body.single #content .entry-meta,
 body.blog #content .entry-meta {
-	padding-bottom:20px;
-	font-size:90%;
-	color: #808080;
+	padding-bottom: 20px;
+	font-size: 90%;
 }
 
 body.blog article {
