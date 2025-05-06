@@ -42,11 +42,10 @@
 }
 
 #content .mtl-paginate-links .page-numbers {
-	color:white;
 	font-weight:bold;
 	display:inline-block;
 	padding:2px 5px;
-	color:rgb(230, 19, 126);
+	color:var(--secondary-color);
 }
 
 #content .mtl-paginate-links .page-numbers.prev,
@@ -72,13 +71,9 @@
 
 #content .mtl-paginate-links a.page-numbers:hover,
 #content .mtl-paginate-links a.page-numbers:focus,
-#content .mtl-paginate-links a.page-numbers:active {
-	background:rgb(0, 174, 239);
-	color:white;
-}	
-
+#content .mtl-paginate-links a.page-numbers:active,
 #content .mtl-paginate-links .page-numbers.current {
-	background:rgb(0, 174, 239);
+	background:var(--primary-color);
 	color:white;
 }
 
@@ -89,9 +84,9 @@
 #content h1 .flag {
 	padding:0 4px;
 
-	background:white;
-	border: 1px solid grey;
-	color:#666666 !important;
+	background:light-dark(white, black);
+	border: 1px solid gray;
+	color: light-dark(#666666, #AAAAAA) !important;
 	font-weight:bold;
 }
 
@@ -151,7 +146,7 @@
 
 #content .mtl-post-tile {
 	position:relative;
-	background:#cccccc;
+	background:light-dark(#cccccc, #303030);
 	padding:10px;
 	width:190px;
 	height:250px;
@@ -232,7 +227,7 @@
 	padding: 10px;
 
 	display: flex;
-	background: #cccccc;
+	background: light-dark(#cccccc, #303030);
 	text-align: left;
 	overflow-y: auto;
 }
@@ -331,9 +326,9 @@
 	left: -50px;
 	width: max-content;
 
-	background-color: white;
+	background-color: light-dark(white, black);
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-	border: 1px solid #cccccc;
+	border: 1px solid light-dark(#cccccc, #555555);
 	border-radius: 10px;
 }
 
@@ -353,7 +348,7 @@
 	left: 48px;
 	margin-left: -10px;
 
-	border-top-color: white;
+	border-top-color: light-dark(white, black);
 	border-width: 10px;
 }
 
@@ -361,7 +356,7 @@
 	left: 48px;
 	margin-left: -11px;
 
-	border-top-color: #cccccc;
+	border-top-color: light-dark(#cccccc, #555555);
 	border-width: 11px;
 }
 

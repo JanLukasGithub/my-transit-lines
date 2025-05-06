@@ -221,8 +221,8 @@ div.success-message-block {
 }
 
 @media (prefers-color-scheme: dark) {
-	#mtl-map .background-tilelayer,
-	#mtl-map .overlay-tilelayer {
+	#mtl-map .background-tilelayer:not(.no-darkmode),
+	#mtl-map .overlay-tilelayer:not(.no-darkmode) {
 		filter: hue-rotate(180deg) invert(95%);
 	}
 }

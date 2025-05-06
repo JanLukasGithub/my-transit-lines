@@ -53,7 +53,7 @@ const ESRI_SOURCE = new ol.source.OSM({
 	url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png',
 	attributions: objectL10n.attributionESRISatellite,
 	crossOrigin: null,
-}); ESRI_SOURCE.setProperties({ title: objectL10n.titleESRISatellite, id: 'esri' });
+}); ESRI_SOURCE.setProperties({ title: objectL10n.titleESRISatellite, id: 'esri', class: 'no-darkmode' });
 
 const OPENRAILWAYMAP_STANDARD_SOURCE = new ol.source.OSM({
 	url: 'https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png',
@@ -223,6 +223,11 @@ class OptionsControl extends ol.control.Control {
 			for (let source of BACKGROUND_SOURCES) {
 				if (target.id.includes(source.get('id'))) {
 					backgroundTileLayer.setSource(source);
+
+					let classes = source.get("class") ? " "+source.get("class") : "";
+
+					document.querySelector("#" + MAP_ID + " .background-tilelayer").className = "background-tilelayer" + classes;
+
 					return;
 				}
 			}

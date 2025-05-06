@@ -52,9 +52,6 @@ option {
 	font-size: inherit;
 	line-height: inherit;
 	color: inherit;
-
-	/* Force normal rendering of form elements that are not yet styleable */
-	color-scheme: light;
 }
 
 body,
@@ -210,7 +207,7 @@ nav.main-navigation li a {
 	font-weight: bold;
 	color: white;
 	font-size: 90%;
-	background: var(--primary-color);
+	background: var(--secondary-color);
 }
 
 nav.main-navigation li a:hover,
@@ -218,7 +215,7 @@ nav.main-navigation li a:active,
 nav.main-navigation li a:focus,
 nav.main-navigation li.current_page_item a,
 nav.main-navigation li.current-page-ancestor a {
-	background: var(--secondary-color);
+	background: var(--primary-color);
 }
 
 nav.top-navigation {
@@ -274,7 +271,7 @@ nav.top-navigation>aside {
 nav.top-navigation li a {
 	font-weight: bold;
 	font-size: 75%;
-	color: #808080;
+	color: gray;
 }
 
 nav.top-navigation li a:hover,
@@ -332,22 +329,7 @@ body.single #content .entry-content {
 #content a:hover,
 #content a:focus,
 #content a:active {
-	color: black;
-}
-
-#content .thickbox {
-	background: var(--primary-color);
-	color: white;
-	font-weight: bold;
-	padding: 10px;
-	text-align: center;
-	font-size: 120%;
-	margin-bottom: 12px;
-}
-
-#content .thickbox a {
-	color: white;
-	font-family: inherit;
+	color: light-dark(black, white);
 }
 
 #content .colored {
@@ -432,30 +414,6 @@ body.single #content .entry-content {
 	padding-bottom: 20px;
 }
 
-#content a.largelink {
-	display: inline-block;
-	width: 49%;
-	min-width: 300px;
-	margin-right: 0%;
-	text-align: center;
-	padding: 3px 0;
-	color: white;
-	font-weight: bold;
-	background: #999999;
-}
-
-#content a.largelink.strassenbahn {
-	background: var(--secondary-color);
-}
-
-#content a.largelink.ubahn {
-	background: var(--primary-color);
-}
-
-#content a.largelink.right {
-	margin: 0;
-}
-
 body.single #content .entry-thumbnail,
 body.blog #content .entry-thumbnail {
 	padding-bottom: 20px;
@@ -489,6 +447,11 @@ body.blog #content article a:focus {
 }
 
 /* form */
+
+/* Force normal rendering of form elements that are not styleable/styled */
+input[type="checkbox"], input[type="radio"], input[type="submit"], input[type="file"], select {
+	color-scheme: light;
+}
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]),
 textarea {
