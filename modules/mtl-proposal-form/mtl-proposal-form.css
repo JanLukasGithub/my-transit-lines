@@ -217,7 +217,14 @@ div.success-message-block {
 
 #mtl-box #mtl-map {
 	height: 550px;
-	background: white;
+	background: light-dark(white, #303030);
+}
+
+@media (prefers-color-scheme: dark) {
+	#mtl-map .background-tilelayer,
+	#mtl-map .overlay-tilelayer {
+		filter: hue-rotate(180deg) invert(95%);
+	}
 }
 
 #mtl-map .background-tilelayer {
