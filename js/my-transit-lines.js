@@ -390,11 +390,11 @@ function getFeatureSize(feature) {
 	if (geom instanceof ol.geom.Point) {
 		return "";
 	} else if (geom instanceof ol.geom.LineString) {
-		return objectL10n.lengthString + formatNumber(ol.sphere.getLength(geom), false) + 'm';
+		return objectL10n.lengthString + formatMeters(ol.sphere.getLength(geom)) + 'm';
 	} else if (geom instanceof ol.geom.Polygon) {
-		return objectL10n.area + formatNumber(ol.sphere.getArea(geom), false, 1E6) + 'm²';
+		return objectL10n.area + formatMeters(ol.sphere.getArea(geom), 1E6) + 'm²';
 	} else if (geom instanceof ol.geom.Circle) {
-		return objectL10n.radius + formatNumber(ol.sphere.getDistance(geom.transform('EPSG:3857', 'EPSG:4326').getCenter(), geom.getLastCoordinate()), false) + 'm';
+		return objectL10n.radius + formatMeters(ol.sphere.getDistance(geom.transform('EPSG:3857', 'EPSG:4326').getCenter(), geom.getLastCoordinate())) + 'm';
 	}
 }
 
