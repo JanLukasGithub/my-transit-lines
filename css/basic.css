@@ -9,8 +9,22 @@
 
 	--primary-color: #00aeef;
 	--secondary-color: #e6137e;
+	--font-color: gray;
+	--background-color: white;
+	--link-hover-color: black;
+	--map-background-color: white;
+	--border-color: #cccccc;
 
-	background-color: light-dark(white, black);
+	background-color: var(--background-color);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--background-color: black;
+		--link-hover-color: white;
+		--map-background-color: #333333;
+		--border-color: #555555;
+	}
 }
 
 /* # general # */
@@ -40,7 +54,7 @@ html {
 	font-size: 16px;
 	line-height: 1.4em;
 	font-weight: normal;
-	color: gray;
+	color: var(--font-color);
 	font-family: 'Open Sans', Arial, Helvetica, sans-serif;
 }
 
@@ -62,9 +76,15 @@ html {
 
 body {
 	text-align: center;
-	background:
-		linear-gradient(light-dark(transparent, color-mix(in srgb, black 80%, transparent))) center top / 100% 241px no-repeat,
-		url('../images/linien.png') top center repeat-x;
+	background: url('../images/linien.png') top center repeat-x;
+}
+
+@media (prefers-color-scheme: dark) {
+	body {
+		background:
+			linear-gradient(color-mix(in srgb, black 80%, transparent)) center top / 100% 241px no-repeat,
+			url('../images/linien.png') top center repeat-x;
+	}
 }
 
 img {
@@ -143,7 +163,7 @@ header.site-header .header-logo a {
 
 header.site-header .header-logo img {
 	--border-size: 15px;
-	--border-color: color-mix(in srgb, light-dark(white, black) 60%, transparent);
+	--border-color: color-mix(in srgb, var(--background-color) 60%, transparent);
 
 	margin: calc(0px - var(--border-size));
 	max-width: 70%;
@@ -162,13 +182,14 @@ header.site-header .header-logo img {
 
 header.site-header h2.site-description {
 	font-size: 135%;
+	line-height: 2.2em;
 	margin-bottom: 50px;
 	text-transform: uppercase;
 }
 
 header.site-header h2.site-description span {
 	--border-size: 15px;
-	--border-color: color-mix(in srgb, light-dark(white, black) 60%, transparent);
+	--border-color: color-mix(in srgb, var(--background-color) 60%, transparent);
 
 	border: var(--border-size) solid transparent;
 	border-radius: var(--border-size);
@@ -220,7 +241,7 @@ nav.main-navigation li.current-page-ancestor a {
 
 nav.top-navigation {
 	--border-size: 5px;
-	--border-color: color-mix(in srgb, light-dark(white, black) 60%, transparent);
+	--border-color: color-mix(in srgb, var(--background-color) 60%, transparent);
 
 	max-width: 900px;
 	width: fit-content;
@@ -254,7 +275,7 @@ nav.top-navigation h1.widget-title {
 nav.top-navigation h1.widget-title strong {
 	font-weight: bold;
 	font-size: inherit;
-	color: light-dark(black, lightgray);
+	color: var(--link-hover-color);
 }
 
 nav.not-logged-in h1.widget-title {
@@ -271,13 +292,13 @@ nav.top-navigation>aside {
 nav.top-navigation li a {
 	font-weight: bold;
 	font-size: 75%;
-	color: gray;
+	color: var(--font-color);
 }
 
 nav.top-navigation li a:hover,
 nav.top-navigation li a:active,
 nav.top-navigation li a:focus {
-	color: light-dark(black, white);
+	color: var(--link-hover-color);
 }
 
 nav.top-navigation ul,
@@ -329,7 +350,7 @@ body.single #content .entry-content {
 #content a:hover,
 #content a:focus,
 #content a:active {
-	color: light-dark(black, white);
+	color: var(--link-hover-color);
 }
 
 #content .colored {
@@ -449,7 +470,11 @@ body.blog #content article a:focus {
 /* form */
 
 /* Force normal rendering of form elements that are not styleable/styled */
-input[type="checkbox"], input[type="radio"], input[type="submit"], input[type="file"], select {
+input[type="checkbox"],
+input[type="radio"],
+input[type="submit"],
+input[type="file"],
+select {
 	color-scheme: light;
 }
 

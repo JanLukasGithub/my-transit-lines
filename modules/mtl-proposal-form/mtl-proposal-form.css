@@ -217,7 +217,7 @@ div.success-message-block {
 
 #mtl-box #mtl-map {
 	height: 550px;
-	background: light-dark(white, #303030);
+	background: var(--map-background-color);
 }
 
 @media (prefers-color-scheme: dark) {
