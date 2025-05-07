@@ -562,6 +562,7 @@ function allowed_css_styles() {
 		'text-decoration',
 		'font-style',
 		'font-weight',
+		'font-size',
 	);
 }
 add_filter( 'safe_style_css', 'allowed_css_styles');
