@@ -394,7 +394,10 @@ function getFeatureSize(feature) {
 	} else if (geom instanceof ol.geom.Polygon) {
 		return objectL10n.area + formatMeters(ol.sphere.getArea(geom), 1E6) + 'm²';
 	} else if (geom instanceof ol.geom.Circle) {
-		return objectL10n.radius + formatMeters(ol.sphere.getDistance(geom.transform('EPSG:3857', 'EPSG:4326').getCenter(), geom.getLastCoordinate())) + 'm';
+		const meters = ol.sphere.getDistance(geom.transform('EPSG:3857', 'EPSG:4326').getCenter(), geom.getLastCoordinate());
+
+		return objectL10n.radius + formatMeters(meters) + 'm\n' + 
+			objectL10n.speed + Math.floor(Math.sqrt(meters * (310) / 11.8)) + ' km/h';
 	}
 }
 

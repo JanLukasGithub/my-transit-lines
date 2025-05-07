@@ -300,6 +300,7 @@ function mtl_localize_script($getVar = false) {
 		'RemoveSnapping'=>__('Disable snapping', 'my-transit-lines'),
 		'lengthString'=>__('Length: ', 'my-transit-lines'),
 		'radius'=>__('Radius: ', 'my-transit-lines'),
+		'speed'=>__('Speed: ', 'my-transit-lines'),
 		'area'=>__('Area: ', 'my-transit-lines'),
 		'decimalSeparator'=>_x('.', 'decimal separator', 'my-transit-lines'),
 		'vectorLayerToggle'=>__('Show feature data', 'my-transit-lines'),
