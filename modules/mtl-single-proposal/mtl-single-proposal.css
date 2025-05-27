@@ -4,6 +4,10 @@
 
 /* User content tags */
 
+#mtl-content {
+	overflow: hidden;
+}
+
 #mtl-content table {
 	border-collapse: collapse;
 }
