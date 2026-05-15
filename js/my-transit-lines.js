@@ -468,7 +468,7 @@ function importJSONFiles(filePicker) {
 		file.text().then((value) => {
 			if (isJsonParsable(value)) {
 				try {
-					importToMapJSON(value);
+					importToMapJSON(value, document.querySelector("[name=\"cat\"]:checked").value);
 	
 					zoomToFeatures();
 				} catch (error) {
@@ -482,7 +482,7 @@ function importJSONFiles(filePicker) {
 /**
  * Imports source string to the map using the GeoJSON format
  * @param {string|JSON} source the JSON string or object to import
- * @param {string} categorySource the category to use for the features
+ * @param {int} categorySource the category to use for the features
  * @param {int} proposal_data_index relevant for multiple proposal view: which proposal data index to add to the features. Default: 0
  */
 function importToMapJSON(source, categorySource, proposal_data_index = 0, vector = vectorSource) {
@@ -500,6 +500,10 @@ function importToMapJSON(source, categorySource, proposal_data_index = 0, vector
 	for (let feature of features) {
 		if (!feature.get('category'))
 			feature.set('category', categorySource);
+
+		if (feature.get('category') != categorySource && !transportModeStyleData[categorySource]["allow-others"].split(",").includes(feature.get('category'))) {
+			feature.set('category', categorySource);
+		}
 
 		feature.set('name', decodeSpecialChars(feature.get('name') || ""));
 
