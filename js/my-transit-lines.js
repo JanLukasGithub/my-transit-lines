@@ -14,7 +14,7 @@ const UNSELECTED_Z_INDEX = 0;
 const SELECTED_Z_INDEX = 1;
 const ICON_SIZE_UNSELECTED = 21;
 const ICON_SIZE_SELECTED = 23;
-const COLOR_SELECTED = '#07f';
+const COLOR_SELECTED = '#0077ff';
 const STROKE_WIDTH_UNSELECTED = 4;
 const STROKE_WIDTH_SELECTED = 3;
 const TEXT_X_OFFSET = 15;
@@ -255,7 +255,7 @@ const overlayTileLayer = new ol.layer.Tile({
 const vectorSource = new ol.source.Vector();
 const vectorLayerConfig = {
 	source: vectorSource,
-	style: styleFunction,
+	style: unselectedStyleFunction,
 };
 const vectorLayer = editMode ? new ol.layer.Vector(vectorLayerConfig) : new ol.layer.VectorImage(vectorLayerConfig);
 
@@ -293,65 +293,38 @@ $(document).ready(function(){
 	}
 });
 
-// returns the style for the given feature
-function styleFunction(feature) {
-	const color = transportModeStyleData[getCategoryOf(feature)]['color'];
-
-	const fillStyle = new ol.style.Fill({
-		color: color + '40',
-	});
-
-	const imageStyle = new ol.style.Icon({
-		src: transportModeStyleData[getCategoryOf(feature)]['image'],
-		width: ICON_SIZE_UNSELECTED,
-		height: ICON_SIZE_UNSELECTED,
-	});
-
-	const strokeStyle = new ol.style.Stroke({
-		color: color,
-		width: STROKE_WIDTH_UNSELECTED,
-	});
-
-	let text = ((showLabels ? feature.get('name') : '') || '') + (feature.get('size') ? '\n' + feature.get('size') : '');
-
-	const textStyle = new ol.style.Text({
-		font: 'bold 11px sans-serif',
-		text: text,
-		textAlign: 'left',
-		fill: new ol.style.Fill({
-			color: 'white',
-		}),
-		stroke: strokeStyle,
-		offsetX: TEXT_X_OFFSET,
-		overflow: true,
-	});
-
-	const zIndex = UNSELECTED_Z_INDEX;
-
-	return new ol.style.Style({
-		fill: fillStyle,
-		image: imageStyle,
-		stroke: strokeStyle,
-		text: textStyle,
-		zIndex: zIndex,
-	});
+function unselectedStyleFunction(feature) {
+	return styleFunction(feature);
 }
 
 // returns the style for a selected feature
 function selectedStyleFunction(feature) {
-    const fillStyle = new ol.style.Fill({
-		color: COLOR_SELECTED + '4',
+	return styleFunction(feature, true);
+}
+
+// returns the style for the given feature
+function styleFunction(feature, selected = false) {
+	const color = selected ? COLOR_SELECTED : transportModeStyleData[getCategoryOf(feature)]['color'];
+
+	const fillStyle = new ol.style.Fill({
+		color: color + '44',
 	});
 
 	const imageStyle = new ol.style.Icon({
-		src: transportModeStyleData[getCategoryOf(feature)]['image-selected'],
-		width: ICON_SIZE_SELECTED,
-		height: ICON_SIZE_SELECTED,
+		src: selected ? transportModeStyleData[getCategoryOf(feature)]['image-selected'] : transportModeStyleData[getCategoryOf(feature)]['image'],
+		width: selected ? ICON_SIZE_SELECTED : ICON_SIZE_UNSELECTED,
+		height: selected ? ICON_SIZE_SELECTED : ICON_SIZE_UNSELECTED,
 	});
 
 	const strokeStyle = new ol.style.Stroke({
-		color: COLOR_SELECTED,
-		width: STROKE_WIDTH_SELECTED,
+		color: feature.get('tunnel') ? color + 'AA' : color,
+		width: selected ? STROKE_WIDTH_SELECTED : STROKE_WIDTH_UNSELECTED,
+		lineDash: feature.get('tunnel') ? [8] : [],
+	});
+
+	const textStrokeStyle = new ol.style.Stroke({
+		color: color,
+		width: selected ? STROKE_WIDTH_SELECTED : STROKE_WIDTH_UNSELECTED,
 	});
 
 	let text = ((showLabels ? feature.get('name') : '') || '') + (feature.get('size') ? '\n' + feature.get('size') : '');
@@ -363,20 +336,42 @@ function selectedStyleFunction(feature) {
 		fill: new ol.style.Fill({
 			color: 'white',
 		}),
-		stroke: strokeStyle,
+		stroke: textStrokeStyle,
 		offsetX: TEXT_X_OFFSET,
 		overflow: true,
 	});
 
-	const zIndex = SELECTED_Z_INDEX;
+	const zIndex = selected ? SELECTED_Z_INDEX : UNSELECTED_Z_INDEX;
 
-	return new ol.style.Style({
+	const style = new ol.style.Style({
 		fill: fillStyle,
 		image: imageStyle,
 		stroke: strokeStyle,
 		text: textStyle,
 		zIndex: zIndex,
 	});
+
+	if (feature.get('bridge')) {
+		const outlineColor = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? '#FFFFFFAA' : '#000000AA' ;
+
+		return [style, new ol.style.Style({
+			stroke: new ol.style.Stroke({
+				color: outlineColor,
+				width: 1,
+				offset: STROKE_WIDTH_UNSELECTED / 2,
+			}),
+			zIndex: zIndex+1,
+		}), new ol.style.Style({
+			stroke: new ol.style.Stroke({
+				color: outlineColor,
+				width: 1,
+				offset: -STROKE_WIDTH_UNSELECTED / 2,
+			}),
+			zIndex: zIndex+1,
+		})]
+	} else {
+		return style;
+	}
 }
 
 /**
@@ -396,7 +391,7 @@ function getFeatureSize(feature) {
 	} else if (geom instanceof ol.geom.Circle) {
 		const meters = ol.sphere.getDistance(geom.transform('EPSG:3857', 'EPSG:4326').getCenter(), geom.getLastCoordinate());
 
-		return objectL10n.radius + formatMeters(meters) + 'm\n' + 
+		return objectL10n.radius + formatMeters(meters) + 'm\n' +
 			objectL10n.speed + Math.floor(Math.sqrt(meters * (310) / 11.8)) + ' km/h';
 	}
 }
