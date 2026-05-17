@@ -37,7 +37,7 @@ const OEPNVKARTE_SOURCE = new ol.source.OSM({
 	attributions: objectL10n.attributionOPNV,
 	maxZoom: MAX_ZOOM_OEPNV_MAP,
 	crossOrigin: null,
-}); OEPNVKARTE_SOURCE.setProperties({title: objectL10n.titleOPNV, id: 'oepnv'});
+}); OEPNVKARTE_SOURCE.setProperties({ title: objectL10n.titleOPNV, id: 'oepnv' });
 const OPENTOPOMAP_SOURCE = new ol.source.OSM({
 	url: 'https://tile.opentopomap.org/{z}/{x}/{y}.png',
 	attributions: objectL10n.attributionOpentopomap,
@@ -72,7 +72,7 @@ const OPENRAILWAYMAP_ELECTRIFICATION_SOURCE = new ol.source.OSM({
 	attributions: objectL10n.attributionOpenrailwaymapElectrified,
 	opaque: false,
 	crossOrigin: null,
-}); OPENRAILWAYMAP_ELECTRIFICATION_SOURCE.setProperties({title: objectL10n.titleOpenrailwaymapElectrified, id: 'openrailway-electrification'});
+}); OPENRAILWAYMAP_ELECTRIFICATION_SOURCE.setProperties({ title: objectL10n.titleOpenrailwaymapElectrified, id: 'openrailway-electrification' });
 const OPENRAILWAYMAP_SIGNALS_SOURCE = new ol.source.OSM({
 	url: 'https://tiles.openrailwaymap.org/signals/{z}/{x}/{y}.png',
 	attributions: objectL10n.attributionOpenrailwaymapSignals,
@@ -224,7 +224,7 @@ class OptionsControl extends ol.control.Control {
 				if (target.id.includes(source.get('id'))) {
 					backgroundTileLayer.setSource(source);
 
-					let classes = source.get("class") ? " "+source.get("class") : "";
+					let classes = source.get("class") ? " " + source.get("class") : "";
 
 					document.querySelector("#" + MAP_ID + " .background-tilelayer").className = "background-tilelayer" + classes;
 
@@ -283,10 +283,10 @@ window.addEventListener('load', loadNewFeatures);
 
 document.addEventListener('DOMContentLoaded', loadDataScripts);
 
-$(document).ready(function(){
+$(document).ready(function () {
 	// Proposal contact form
-	if($('#proposal-author-contact-form').length) {
-		$('#proposal-author-contact-form .pacf-toggle').on('click',function(e){
+	if ($('#proposal-author-contact-form').length) {
+		$('#proposal-author-contact-form .pacf-toggle').on('click', function (e) {
 			e.preventDefault();
 			$(this).closest('div').find('form').slideToggle();
 		});
@@ -352,7 +352,7 @@ function styleFunction(feature, selected = false) {
 	});
 
 	if (feature.get('bridge')) {
-		const outlineColor = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? '#FFFFFFAA' : '#000000AA' ;
+		const outlineColor = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? '#FFFFFFAA' : '#000000AA';
 
 		return [style, new ol.style.Style({
 			stroke: new ol.style.Stroke({
@@ -360,14 +360,14 @@ function styleFunction(feature, selected = false) {
 				width: 1,
 				offset: STROKE_WIDTH_UNSELECTED / 2,
 			}),
-			zIndex: zIndex+1,
+			zIndex: zIndex + 1,
 		}), new ol.style.Style({
 			stroke: new ol.style.Stroke({
 				color: outlineColor,
 				width: 1,
 				offset: -STROKE_WIDTH_UNSELECTED / 2,
 			}),
-			zIndex: zIndex+1,
+			zIndex: zIndex + 1,
 		})]
 	} else {
 		return style;
@@ -464,7 +464,7 @@ function importJSONFiles(filePicker) {
 			if (isJsonParsable(value)) {
 				try {
 					importToMapJSON(value, document.querySelector("[name=\"cat\"]:checked").value);
-	
+
 					zoomToFeatures();
 				} catch (error) {
 					console.log(error);
@@ -583,8 +583,8 @@ function toggleFullscreen() {
 
 	// Need to get the size manually because OpenLayers only updates the map size after this function and redraw() doesn't help
 	const mapContainer = document.getElementById('mtl-map');
-	mapContainer.scrollIntoView({behaviour: 'instant', block: 'center', inline: 'center'});
-	view.fit(prevExtent, {size: [mapContainer.offsetWidth, mapContainer.offsetHeight]});
+	mapContainer.scrollIntoView({ behaviour: 'instant', block: 'center', inline: 'center' });
+	view.fit(prevExtent, { size: [mapContainer.offsetWidth, mapContainer.offsetHeight] });
 }
 
 // Toggle if the map is brigthened (low opacity) or not (full opacity)
@@ -629,9 +629,9 @@ function toggleSizes() {
 */
 function decodeSpecialChars(p_string) {
 	let new_string = p_string;
-	new_string = new_string.replace(/&#44;/g,',');
-	new_string = new_string.replace(/&quot;/g,'"');
-	new_string = new_string.replace(/&apos;/g,'\'');
+	new_string = new_string.replace(/&#44;/g, ',');
+	new_string = new_string.replace(/&quot;/g, '"');
+	new_string = new_string.replace(/&apos;/g, '\'');
 	return new_string;
 }
 
@@ -645,9 +645,9 @@ function decodeSpecialChars(p_string) {
 */
 function encodeSpecialChars(p_string) {
 	let new_string = p_string;
-	new_string = new_string.replace(/,/g,'&#44;');
-	new_string = new_string.replace(/"/g,'&quot;');
-	new_string = new_string.replace(/'/g,'&apos;');
+	new_string = new_string.replace(/,/g, '&#44;');
+	new_string = new_string.replace(/"/g, '&quot;');
+	new_string = new_string.replace(/'/g, '&apos;');
 	return new_string;
 }
 
