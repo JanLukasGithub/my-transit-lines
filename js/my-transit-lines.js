@@ -243,6 +243,15 @@ class OptionsControl extends ol.control.Control {
 	}
 }
 
+class FullscreenControl extends ol.control.Control {
+	constructor(options = {}) {
+		super({
+			element: document.getElementById('toggle-fullscreen'),
+			target: options.target,
+		});
+	}
+}
+
 const backgroundTileLayer = new ol.layer.Tile({
 	className: 'background-tilelayer',
 	source: OSM_SOURCE,
@@ -271,9 +280,10 @@ const attributionControl = new ol.control.Attribution({
 	collapsible: true,
 	collapsed: false,
 });
+const fullscreenControl = new FullscreenControl();
 
 const map = new ol.Map({
-	controls: [new ol.control.Zoom(), new ol.control.ScaleLine(), new ol.control.Rotate(), attributionControl, optionsControl],
+	controls: [new ol.control.Zoom(), new ol.control.ScaleLine(), new ol.control.Rotate(), attributionControl, optionsControl, fullscreenControl],
 	layers: [backgroundTileLayer, overlayTileLayer, vectorLayer],
 	target: MAP_ID,
 	view: view,
@@ -563,9 +573,16 @@ function toggleLabels() {
 	redraw();
 }
 
+// Remove fullscreen on 'Escape' press
+document.querySelector('body').addEventListener('keydown', event => {
+	if (event.key == "Escape" && document.querySelector('[data-mtl-toggle-fullscreen]').classList.contains('fullscreen')) {
+		toggleFullscreen();
+	}
+});
+
 // Toggle if the map is displayed in fullscreen or not
 function toggleFullscreen() {
-	if (document.getElementById('mtl-fullscreen-link') === document.activeElement)
+	if (document.getElementById('toggle-fullscreen') === document.activeElement)
 		document.activeElement.blur();
 
 	const prevExtent = view.calculateExtent();

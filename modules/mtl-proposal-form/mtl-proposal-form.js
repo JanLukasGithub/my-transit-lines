@@ -336,7 +336,13 @@ window.addEventListener('DOMContentLoaded', addSaveEventListeners);
 window.addEventListener('DOMContentLoaded', () => {
 	document.getElementById('feature-textinput').addEventListener('keydown', e => {
 		if(e.key === "Enter") {
+			unselectAllFeatures();
+
 			e.preventDefault();
+		} else if (e.key === "Escape") {
+			// TODO: close without saving changes
+
+			e.stopPropagation();
 		}
 	});
 });
