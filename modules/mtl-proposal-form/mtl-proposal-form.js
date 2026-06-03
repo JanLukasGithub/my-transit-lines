@@ -29,6 +29,7 @@ class InteractionControl extends ol.control.Control {
 		this.polygonButton = this.createButton('Polygon', themeUrl + '/images/drawPolygon.png');
 		this.circleButton = this.createButton('Circle', themeUrl + '/images/drawCircle.png');
 		this.modifyButton = this.createButton('Modify', themeUrl + '/images/modifyFeature.png');
+		this.scissorsButton = this.createButton('Scissors', themeUrl + '/images/cut.png');
 		this.selectButton = this.createButton('Select', themeUrl + '/images/selectFeatureAddName.png');
 		this.deleteButton = this.createButton('Delete', themeUrl + '/images/deleteFeatures.png');
 		this.deleteButton.classList.add('unselectable');
@@ -41,6 +42,7 @@ class InteractionControl extends ol.control.Control {
 		this.element.appendChild(this.polygonButton);
 		this.element.appendChild(this.circleButton);
 		this.element.appendChild(this.modifyButton);
+		this.element.appendChild(this.scissorsButton);
 		this.element.appendChild(this.selectButton);
 		this.element.appendChild(this.deleteButton);
 		this.element.appendChild(this.navigateButton);
@@ -63,6 +65,10 @@ class InteractionControl extends ol.control.Control {
 
 	handleButtonClick(event) {
 		let target = event.target;
+
+		if (target.classList.contains('unselectable')) {
+			return;
+		}
 
 		if (target == this.deleteButton) {
 			deleteSelected();
@@ -158,11 +164,158 @@ class InteractionControl extends ol.control.Control {
 	}
 }
 
+class ScissorsInteraction extends ol.interaction.Pointer {
+	constructor(options) {
+		super({
+			handleDownEvent: ScissorsInteraction.handleDownEvent,
+			handleMoveEvent: ScissorsInteraction.handleMoveEvent,
+		});
+
+		/**
+		 * @type {string|undefined}
+		 * @private
+		 */
+		this.cursor_ = 'url("' + themeUrl + '/images/cut.png' + '") 10 1, pointer';
+
+		/**
+		 * @type {string|undefined}
+		 * @private
+		 */
+		this.previousCursor_ = undefined;
+
+		/**
+		 * @type {VectorSource}
+		 * @private
+		 */
+		this.source_ = options.source || vectorSource;
+	}
+
+	/**
+	 * @param {import('ol/MapBrowserEvent.js').default} evt Map browser event.
+	 * @return {boolean} `false` to avoid a drag sequence.
+	 */
+	handleDownEvent(evt) {
+		const map = evt.map;
+
+		const features = map.getFeaturesAtPixel(evt.pixel);
+
+		for (let i = 0; i < features.length; i++) {
+			const feature = features[i];
+			
+			if (feature.getGeometry() instanceof ol.geom.LineString) {
+				const coords = feature.getGeometry().getCoordinates();
+
+				let found_coords = false;
+
+				for (let j = 0; j < coords.length; j++) {
+					const coord = coords[j];
+
+					if (coord[0] == evt.coordinate[0] && coord[1] == evt.coordinate[1]) {
+						if (j != 0 && j != coords.length - 1) {
+							const clone = feature.clone();
+
+							feature.getGeometry().setCoordinates(coords.slice(0, j+1));
+							clone.getGeometry().setCoordinates(coords.slice(j));
+
+							vectorSource.addFeature(clone);
+						}
+
+						found_coords = true;
+						break;
+					}
+				}
+
+				if (found_coords)
+					break;
+
+				for (let j = 0; j < coords.length - 1; j++) {
+					const start = coords[j];
+					const end = coords[j+1];
+					const length = Math.sqrt((start[0]-end[0])*(start[0]-end[0]) + (start[1]-end[1])*(start[1]-end[1]));
+
+					const t = ((end[0]-start[0])*(evt.coordinate[0]-start[0]) + (end[1]-start[1])*(evt.coordinate[1]-start[1])) / ((end[0]-start[0])*(end[0]-start[0]) + (end[1]-start[1])*(end[1]-start[1]));
+					const s = (evt.coordinate[1] - start[1] - (end[1] - start[1]) * t) / (end[0] - start[0]);
+
+					if (0 <= t && t <= 1 && Math.abs(s * length) < 10E-8) {
+						const cut_coords = [start[0] + t * (end[0] - start[0]), start[1] + t * (end[1] - start[1])];
+
+						const clone = feature.clone();
+
+						feature.getGeometry().setCoordinates(coords.slice(0, j+1));
+						feature.getGeometry().appendCoordinate(cut_coords);
+						clone.getGeometry().setCoordinates(Array.of(cut_coords, ...coords.slice(j+1)));
+
+						vectorSource.addFeature(clone);
+
+						break;
+					}
+				}
+
+				break;
+			} else if (feature.getGeometry() instanceof ol.geom.Polygon) {
+				// TODO split along a line
+
+				break;
+			} else {
+				continue;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param {import('ol/MapBrowserEvent.js').default} evt Event.
+	 */
+	handleMoveEvent(evt) {
+		if (this.cursor_) {
+			const map = evt.map;
+			const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+				if (feature.getGeometry() instanceof ol.geom.Point) {
+					return undefined;
+				} else {
+					return feature;
+				}
+			});
+			const element = evt.map.getTargetElement();
+			if (feature) {
+				if (element.style.cursor != this.cursor_) {
+					this.previousCursor_ = element.style.cursor;
+					element.style.cursor = this.cursor_;
+				}
+			} else if (this.previousCursor_ !== undefined) {
+				element.style.cursor = this.previousCursor_;
+				this.previousCursor_ = undefined;
+			}
+		}
+	}
+}
+
 const attributionLayer = new ol.layer.Layer({
 	source: new ol.source.Source({ attributions: objectL10n.attributionIcons }),
 	render: function () { return null; }
 });
 map.addLayer(attributionLayer);
+
+const point_source = new ol.source.Vector();
+const point_layer = new ol.layer.Vector({
+	source: point_source,
+	style: new ol.style.Style({
+		image: new ol.style.Circle({
+			fill: new ol.style.Fill({
+				color: 'rgba(255,255,255,0.4)',
+			}),
+			stroke: new ol.style.Stroke({
+				color: '#3399CC',
+				width: 1.25,
+			}),
+			radius: 5,
+		})
+	}),
+});
+update_point_source();
+
+vectorSource.on('change', update_point_source);
 
 // global so we can remove them later
 let drawInteraction;
@@ -170,6 +323,7 @@ const modifyInteraction = new ol.interaction.Modify({ source: vectorSource });
 const dragBoxInteraction = new ol.interaction.DragBox();
 const selectInteraction = new ol.interaction.Select({ layers: [vectorLayer], multi: true, style: selectedStyleFunction });
 const snapInteraction = new ol.interaction.Snap({ source: vectorSource });
+const scissorsInteraction = new ScissorsInteraction({ source: vectorSource });
 
 const selectedFeatures = selectInteraction.getFeatures();
 
@@ -225,6 +379,29 @@ $('input.cat-select').on("change", function () {
 
 	interactionControl.updateCategorySelector();
 });
+
+// updates the points displayed by the point_layer
+function update_point_source() {
+	point_source.clear();
+
+	vectorSource.getFeatures().forEach(feature => {
+		const geometry = feature.getGeometry();
+
+		if (geometry instanceof ol.geom.LineString) {
+			geometry.getCoordinates().forEach(coordinate => {
+				point_source.addFeature(new ol.Feature({geometry: new ol.geom.Point(coordinate)}));
+			});
+		} else if (geometry instanceof ol.geom.Polygon) {
+			geometry.getCoordinates().forEach(array => {
+				array.forEach(coordinate => {
+					point_source.addFeature(new ol.Feature({geometry: new ol.geom.Point(coordinate)}));
+				});
+			});
+		} else if (geometry instanceof ol.geom.Circle) {
+			point_source.addFeature(new ol.Feature({geometry: new ol.geom.Point(geometry.getCenter())}));
+		}
+	});
+}
 
 // returns the style for the given feature while being drawn
 function drawStyleFunction(feature) {
@@ -400,6 +577,12 @@ function setInteraction(interactionType) {
 		case 'Modify':
 			map.addInteraction(modifyInteraction);
 			map.addInteraction(snapInteraction);
+			point_layer.setMap(map);
+			break;
+		case 'Scissors':
+			map.addInteraction(scissorsInteraction);
+			map.addInteraction(snapInteraction);
+			point_layer.setMap(map);
 			break;
 		case 'Navigate':
 			break;
@@ -416,8 +599,11 @@ function removeInteractions() {
 	selectedFeatures.clear();
 	map.removeInteraction(selectInteraction);
 	map.removeInteraction(modifyInteraction);
+	map.getTargetElement().style.cursor = null;
+	map.removeInteraction(scissorsInteraction);
 	map.removeInteraction(snapInteraction);
 	map.removeInteraction(dragBoxInteraction);
+	point_layer.setMap(null);
 }
 
 /**
