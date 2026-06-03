@@ -226,7 +226,7 @@ function mtl_proposal_form_output( $atts ){
 		}
 		
 		if(!$action || $err) {
-			$output .= '<form id="new_post" name="new_post" method="post" action="" enctype="multipart/form-data" onsubmit=" warningMessage = \'\' ">'."\r\n";
+			$output .= '<form id="new_post" name="new_post" method="post" action="" enctype="multipart/form-data" onsubmit=" has_changed = false; ">'."\r\n";
 			$output .= '<p class="alignleft"><label for="title"><strong>'.$mtl_string['form-title'][$postType].'</strong><br />'."\r\n";
 			
 			// input field title with value set to title from post variables, if existing
@@ -445,13 +445,13 @@ function add_textinput_box($box) {
 	$split = strrpos($box, '</div>');
 
 	return substr($box, 0, $split).'
-		<div class="feature-textinput-box">
+		<div id="feature-textinput-box">
 			<label for="feature-textinput">'.
 				__('Station name (optional)','my-transit-lines').': '.
 				'<br>
 				<input type="text" name="feature-textinput" id="feature-textinput">
 			</label>
-			<span class="set-name">'.
+			<span class="set-name" onclick="unselectAllFeatures()">'.
 				__('Set new name', 'my-transit-lines').
 			'</span>
 		</div>

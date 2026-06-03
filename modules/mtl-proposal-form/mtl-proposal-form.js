@@ -8,7 +8,7 @@ const districtFeatures = typeof(districtSource) != 'undefined' && districtSource
 
 var selectedFeatureIndex = -1;
 var snapping = true;
-var warningMessage = '';
+var has_changed = false;
 
 class InteractionControl extends ol.control.Control {
 	constructor(opt_options) {
@@ -93,8 +93,10 @@ class InteractionControl extends ol.control.Control {
 			node.classList.remove('selected');
 		}
 
-		$('.mtl-tool-hint').css('display', 'none');
-		$('.mtl-tool-hint.' + target.value).css('display', 'inline');
+		document.querySelectorAll('.mtl-tool-hint').forEach((elem) => {
+			elem.style.display = 'none';
+		});
+		document.querySelector('.mtl-tool-hint.' + target.value).style.display = 'inline';
 
 		target.classList.add('selected');
 
@@ -360,20 +362,27 @@ selectedFeatures.on('add', handleFeatureSelected);
 selectedFeatures.on('remove', handleFeatureUnselected);
 
 //Notify the user when about to leave page without saving changes
-$(window).on('beforeunload', function () {
-	if (warningMessage != '') return warningMessage;
+window.addEventListener('beforeunload', (e) => {
+	if (has_changed) {
+		e.preventDefault();
+	}
 });
 
-$('#title, #description').on('input propertychange paste', function () {
-	warningMessage = objectL10n.confirmLeaveWebsite;
+const has_changed_handler = () => { has_changed = true };
+document.querySelectorAll('#title, #description').forEach(elem => {
+	elem.addEventListener('input', has_changed_handler);
+	elem.addEventListener('propertychange', has_changed_handler);
+	elem.addEventListener('paste', has_changed_handler);
 });
-$('input.cat-select').on("change", function () {
-	warningMessage = objectL10n.confirmLeaveWebsite;
 
-	const new_allowed_cats = [getSelectedCategory()].concat(transportModeStyleData[getSelectedCategory()]['allow-others'].split(','));
+document.querySelector('input.cat-select').addEventListener('change', () => {
+	has_changed = true;
+
+	const selected_category = getSelectedCategory();
+	const new_allowed_cats = [selected_category].concat(transportModeStyleData[selected_category]['allow-others'].split(','));
 	for (let feature of vectorSource.getFeatures()) {
 		if (!new_allowed_cats.includes(feature.get('category'))) {
-			feature.set('category', getSelectedCategory());
+			feature.set('category', selected_category);
 		}
 	}
 
@@ -447,12 +456,9 @@ function handleFeatureSelected(event) {
 
 	interactionControl.updateSelectedCategory(getCategoryOf(event.element));
 
-	$('#feature-textinput').val(event.element.get('name'));
-	$('.feature-textinput-box').slideDown();
-	$('.set-name').css('display', 'block');
-	$('.set-name').click(function () {
-		unselectAllFeatures();
-	});
+	document.getElementById('feature-textinput').value = event.element.get('name');
+	document.getElementById('feature-textinput-box').classList.add('shown');
+
 	selectedFeatureIndex = vectorSource.getFeatures().indexOf(event.element);
 
 	event.element.set('size', getFeatureSize(event.element));
@@ -464,11 +470,11 @@ function handleFeatureUnselected(event) {
 		interactionControl.deleteButton.classList.add('unselectable');
 
 	if (vectorSource.getFeatures().indexOf(event.element) == selectedFeatureIndex) {
-		vectorSource.getFeatures()[selectedFeatureIndex].set('name', $('#feature-textinput').val());
+		vectorSource.getFeatures()[selectedFeatureIndex].set('name', document.getElementById('feature-textinput').value);
 		selectedFeatureIndex = -1;
-		$('#feature-textinput').val('');
-		$('.feature-textinput-box').slideUp();
-		$('.set-name').css('display', 'none');
+
+		document.getElementById('feature-textinput').value = '';
+		document.getElementById('feature-textinput-box').classList.remove('shown');
 	}
 
 	event.element.unset('size');
@@ -703,14 +709,14 @@ function getSelectedDrawCategory() {
  * @param {FeatureLike[]} features the array of features to save
  */
 function saveToHTML(features = vectorSource.getFeatures()) {
-	warningMessage = objectL10n.confirmLeaveWebsite;
+	has_changed = true;
 
 	// write JSON features data to html element (will be saved to database on form submit)
-	$('#mtl-features').val(exportToJSON());
-	$('#mtl-count-stations').val(getCountStations(features));
-	$('#mtl-line-length').val(getLineLength(features));
-	$('#mtl-tags').val(getStationLocations(features));
-	$('#mtl-costs').val(getLineCost(features));
+	document.getElementById('mtl-features').value = exportToJSON();
+	document.getElementById('mtl-count-stations').value = getCountStations(features);
+	document.getElementById('mtl-line-length').value = getLineLength(features);
+	document.getElementById('mtl-tags').value = getStationLocations(features);
+	document.getElementById('mtl-costs').value = getLineCost(features);
 }
 
 /**

@@ -311,7 +311,7 @@ div.success-message-block {
 	display: none;
 }
 
-.feature-textinput-box {
+#feature-textinput-box {
 	position: absolute;
 	top: 30px;
 	right: 8px;
@@ -320,25 +320,32 @@ div.success-message-block {
 	padding: 5px;
 	background: #cccccc;
 	border: 1px solid #aaaaaa;
-	display: none;
 	text-align: left;
+
+	visibility: none;
+	clip-path: inset(0% 0% 100% 0%);
+	transition: display 0.5s allow-discrete, clip-path 0.5s normal;
 }
 
-.feature-textinput-box * {
+#feature-textinput-box.shown {
+	visibility: block;
+	clip-path: inset(0% 0% 0% 0%);
+}
+
+#feature-textinput-box * {
 	font-size: 13px;
 }
 
-.feature-textinput-box label {
+#feature-textinput-box label {
 	display: inline;
 }
 
-.feature-textinput-box input {
+#feature-textinput-box input {
 	min-width: auto;
 	max-width: 222px;
 }
 
 .set-name {
-	display: none;
 	text-decoration: underline;
 	cursor: pointer;
 }
