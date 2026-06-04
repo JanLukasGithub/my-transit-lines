@@ -270,6 +270,8 @@ class ScissorsInteraction extends ol.interaction.Pointer {
 	 * @param {import('ol/MapBrowserEvent.js').default} evt Event.
 	 */
 	handleMoveEvent(evt) {
+		// TODO: show where the cut will happen
+
 		if (this.cursor_) {
 			const map = evt.map;
 			const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
@@ -381,7 +383,7 @@ document.querySelectorAll('#title, #description').forEach(elem => {
 	elem.addEventListener('paste', has_changed_handler);
 });
 
-document.querySelector('input.cat-select').addEventListener('change', () => {
+const cat_change_handler = () => {
 	has_changed = true;
 
 	const selected_category = getSelectedCategory();
@@ -393,10 +395,15 @@ document.querySelector('input.cat-select').addEventListener('change', () => {
 	}
 
 	interactionControl.updateCategorySelector();
+};
+document.querySelectorAll('input.cat-select').forEach(elem => {
+	elem.addEventListener('change', cat_change_handler);
 });
 
 // updates the points displayed by the point_layer
 function update_point_source() {
+	// TODO only update when no feature is currently being modified by dragging
+
 	point_source.clear();
 
 	vectorSource.getFeatures().forEach(feature => {
@@ -462,7 +469,7 @@ function handleFeatureSelected(event) {
 
 	interactionControl.updateSelectedCategory(getCategoryOf(event.element));
 
-	document.getElementById('feature-textinput').value = event.element.get('name');
+	document.getElementById('feature-textinput').value = event.element.get('name') ?? "";
 	document.getElementById('feature-textinput-box').classList.add('shown');
 
 	selectedFeatureIndex = vectorSource.getFeatures().indexOf(event.element);
