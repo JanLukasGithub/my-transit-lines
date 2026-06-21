@@ -528,7 +528,6 @@ function handleBoxSelect() {
 			.getFeaturesInExtent(extent)
 			.filter(
 				(feature) =>
-					!selectedFeatures.getArray().includes(feature) &&
 					feature.getGeometry().intersectsExtent(extent)
 			);
 
@@ -556,11 +555,21 @@ function handleBoxSelect() {
 				const geometry = feature.getGeometry().clone();
 				geometry.rotate(-rotation, anchor);
 				if (geometry.intersectsExtent(extent)) {
-					selectedFeatures.push(feature);
+					if (selectedFeatures.getArray().includes(feature)) {
+						selectedFeatures.remove(feature);
+					} else {
+						selectedFeatures.push(feature);
+					}
 				}
 			});
 		} else {
-			selectedFeatures.extend(boxFeatures);
+			boxFeatures.forEach(function (feature) {
+				if (selectedFeatures.getArray().includes(feature)) {
+					selectedFeatures.remove(feature);
+				} else {
+					selectedFeatures.push(feature);
+				}
+			});
 		}
 	}
 }
