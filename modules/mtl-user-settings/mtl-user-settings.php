@@ -136,6 +136,35 @@ function mtl_user_settings_output( $atts ) {
 				</td>
 			</tr>
 		</tbody></table>
+		<h2>'.
+			__('Notification settings','my-transit-lines').
+		'</h2>
+		<table class="form-table" role="presentation"><tbody>
+			<tr>
+				<th scope="row">'.
+					__('Forum notifications','my-transit-lines').
+				'</th>
+				<td>
+					<p>
+						<a href="'.get_permalink(pll_get_post(get_option('mtl-option-name')['mtl-forum-page'])).'subscriptions/">'.
+							__('You can change forum notifications on their own page', 'my-transit-lines').
+						'</a>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">'.
+					__('Comment notifications','my-transit-lines').
+				'</th>
+				<td>
+					<p>
+						<a href="'.get_option('subscribe_reloaded_manager_page').'">'.
+							__('You can change comment notifications on their own page', 'my-transit-lines').
+						'</a>
+					</p>
+				</td>
+			</tr>
+		</tbody></table>
 
 		<p class="aligncenter">
 			<input type="submit" value="'.__('Save changes','my-transit-lines').'">
