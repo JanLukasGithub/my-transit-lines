@@ -81,6 +81,7 @@ function mtl_user_settings_output( $atts ) {
 	}
 
 	global $user_login;
+	$theme = get_user_meta( get_current_user_id(), 'theme', true );
 
 	return $submit_message.
 	'<form id="mtl-user-settings-form" method="post" action="">
@@ -88,7 +89,7 @@ function mtl_user_settings_output( $atts ) {
 		<h2>'.
 			__('Profile settings','my-transit-lines').
 		'</h2>
-		<table class="form-table" role="presentation"><tbody>
+		<table id="profile-table" class="form-table" role="presentation"><tbody>
 			<tr>
 				<th scope="row">'.
 					__('Profile name','my-transit-lines').
@@ -119,7 +120,7 @@ function mtl_user_settings_output( $atts ) {
 		<h2>'.
 			__('Contact settings','my-transit-lines').
 		'</h2>
-		<table class="form-table" role="presentation"><tbody>
+		<table id="contact-table" class="form-table" role="presentation"><tbody>
 			<tr>
 				<th scope="row">'.
 					__('Contact button','my-transit-lines').
@@ -139,7 +140,7 @@ function mtl_user_settings_output( $atts ) {
 		<h2>'.
 			__('Notification settings','my-transit-lines').
 		'</h2>
-		<table class="form-table" role="presentation"><tbody>
+		<table id="notification-table" class="form-table" role="presentation"><tbody>
 			<tr>
 				<th scope="row">'.
 					__('Forum notifications','my-transit-lines').
@@ -165,6 +166,24 @@ function mtl_user_settings_output( $atts ) {
 				</td>
 			</tr>
 		</tbody></table>
+		<h2>'.
+			__('Appearance settings','my-transit-lines').
+		'</h2>
+		<table id="appearance-table" class="form-table" role="presentation"><tbody>
+			<tr>
+				<th scope="row">'.
+					__('Theme','my-transit-lines').
+				'</th>
+				<td>
+					<p>
+						<input type="radio" id="system-theme" name="theme" value="system"'.($theme == 'system' || $theme == '' ? 'checked' : '').'><label for="system-theme">'.__('System', 'my-transit-lines').'</label>
+						<input type="radio" id="light-theme" name="theme" value="light"'.($theme == 'light' ? 'checked' : '').'><label for="light-theme">'.__('Light', 'my-transit-lines').'</label>
+						<input type="radio" id="dark-theme" name="theme" value="dark"'.($theme == 'dark' ? 'checked' : '').'><label for="dark-theme">'.__('Dark', 'my-transit-lines').'</label>
+					</p>
+				</td>
+			</tr>
+			
+		</tbody></table>
 
 		<p class="aligncenter">
 			<input type="submit" value="'.__('Save changes','my-transit-lines').'">
@@ -180,4 +199,5 @@ add_shortcode( 'mtl-user-settings', 'mtl_user_settings_output' );
  */
 function mtl_user_settings_post( $atts ) {
 	update_user_meta( get_current_user_id(), 'enable-contact-button', isset( $_POST['enable-contact-button'] ) );
+	update_user_meta( get_current_user_id(), 'theme', $_POST['theme'] ?? 'system' );
 }

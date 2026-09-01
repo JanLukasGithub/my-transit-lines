@@ -18,20 +18,40 @@ if(is_single() && get_post_type()=='mtlproposal') {
 	if(!current_user_can('administrator') && in_array($mtl_options['mtl-cat-use'.$catid], ['no','only-in-search'])) header('Location: '.get_bloginfo('url').'');
 }
 
+$theme = get_user_meta( get_current_user_id(), 'theme', true ) ?? 'system' ?: 'system';
+// We need to consider that the header is loaded before the user's theme will be updated
+$theme = $_POST['theme'] ?? $theme;
+
 ?><!DOCTYPE html>
-<html <?php language_attributes(); ?>>
+<html <?php language_attributes(); ?> class="<?php echo $theme; ?>-theme">
+<!-- Script to always set the correct theme -->
+<script>
+let query = window.matchMedia("(prefers-color-scheme: dark)");
+updateTheme(query);
+query.addEventListener('change', updateTheme);
+
+function updateTheme(query) {
+	let themes = document.querySelector('html').classList;
+
+	if (query.matches) {
+		if (themes.contains('system-theme')) {
+			themes.add('dark-theme');
+			themes.remove('light-theme');
+		}
+	} else {
+		if (themes.contains('system-theme')) {
+			themes.add('light-theme');
+			themes.remove('dark-theme');
+		}
+	}
+}
+</script>
 <head>
-<?php
-// including HTML5 enabling script for IE versions < 9 ?>
-<!--[if lt IE 9]>
-<script src="<?php echo get_bloginfo('template_url'); ?>/js/html5shiv.min.js"></script>
-<![endif]-->
-<?php
-// use our logo file as Open Graph image, e.g. for Facebook ?>
+<!-- Use our logo file as Open Graph image, e.g. for Facebook -->
 <meta property="og:image" content="<?php echo get_bloginfo('stylesheet_directory').'/images/logo.png'; ?>" />
-<?php
-// include the favicon ?>
+<!-- Include the favicon -->
 <link rel="shortcut icon" href="<?php echo get_bloginfo('stylesheet_directory').'/images/favicon.ico'; ?>" />
+<meta name="color-scheme" content="<?php echo $theme == 'system' ? 'light dark' : $theme ?>" />
 <meta charset="<?php bloginfo( 'charset' ); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?php wp_title( '|', true, 'right' ); ?></title>

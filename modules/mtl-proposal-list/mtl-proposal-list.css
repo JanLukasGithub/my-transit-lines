@@ -102,10 +102,8 @@
 	opacity:.4 !important;
 }
 
-@media (prefers-color-scheme: dark) {
-	#content div.mtl-post-tile .background-tilelayer {
-		filter: hue-rotate(180deg) invert(95%);
-	}
+:root.dark-theme #content div.mtl-post-tile .background-tilelayer {
+	filter: hue-rotate(180deg) invert(95%);
 }
 
 /* content tiles */
@@ -252,10 +250,8 @@
 	background-color: var(--map-background-color);
 }
 
-@media (prefers-color-scheme: dark) {
-	#content article.mtl-postlist-item .background-tilelayer {
-		filter: hue-rotate(180deg) invert(95%);
-	}
+:root.dark-theme #content article.mtl-postlist-item .background-tilelayer {
+	filter: hue-rotate(180deg) invert(95%);
 }
 
 .mtl-list-map-link {

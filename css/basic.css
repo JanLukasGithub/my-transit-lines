@@ -16,14 +16,22 @@
 	--border-color: #cccccc;
 
 	background-color: var(--background-color);
-}
 
-@media (prefers-color-scheme: dark) {
-	:root {
+	&.dark-theme {
 		--background-color: black;
 		--link-hover-color: white;
 		--map-background-color: #333333;
 		--border-color: #555555;
+	}
+}
+
+:root:not(.system-theme) {
+	&.light-theme {
+		color-scheme: light;
+	}
+
+	&.dark-theme {
+		color-scheme: dark;
 	}
 }
 
@@ -79,12 +87,10 @@ body {
 	background: url('../images/linien.png') top center repeat-x;
 }
 
-@media (prefers-color-scheme: dark) {
-	body {
-		background:
-			linear-gradient(color-mix(in srgb, black 80%, transparent)) center top / 100% 241px no-repeat,
-			url('../images/linien.png') top center repeat-x;
-	}
+:root.dark-theme body {
+	background:
+		linear-gradient(color-mix(in srgb, black 70%, transparent)) center top / 100% 241px no-repeat,
+		url('../images/linien.png') top center repeat-x;
 }
 
 img {
