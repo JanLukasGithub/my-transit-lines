@@ -288,6 +288,10 @@ const map = new ol.Map({
 	target: MAP_ID,
 	view: view,
 });
+document.getElementById(MAP_ID).addEventListener('contextmenu', (e) => {
+	e.preventDefault();
+	e.stopPropagation();
+}, { capture: true });
 
 window.addEventListener('load', loadNewFeatures);
 

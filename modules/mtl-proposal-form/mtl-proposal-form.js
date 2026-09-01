@@ -323,7 +323,19 @@ vectorSource.on('change', update_point_source);
 
 // global so we can remove them later
 let drawInteraction;
-const modifyInteraction = new ol.interaction.Modify({ source: vectorSource });
+const modifyInteraction = new ol.interaction.Modify({ source: vectorSource, deleteCondition: (event) => {
+	if (event.type != 'pointerdown' || event.dragging) {
+		return false;
+	}
+	if ((event.originalEvent.buttons & 2) != 2) {
+		return false;
+	}
+
+	// Pointer isn't updated by default when not using the primary mouse button
+	modifyInteraction.updatePointer_(event.coordinate_);
+
+	return true;
+}});
 const dragBoxInteraction = new ol.interaction.DragBox();
 const selectInteraction = new ol.interaction.Select({ layers: [vectorLayer], multi: true, style: selectedStyleFunction });
 const snapInteraction = new ol.interaction.Snap({ source: vectorSource });
