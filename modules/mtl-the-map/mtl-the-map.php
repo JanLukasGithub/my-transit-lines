@@ -28,9 +28,12 @@ function the_map_output() {
 				</span>
 				&nbsp;
 				<span id="mtl-opacity-low-box">
-					<label for="mtl-opacity-low">
-						<input type="checkbox" checked="checked" id="mtl-opacity-low" name="opacity-low" onclick="toggleMapOpacity()"> '.
+					<input type="checkbox" checked="checked" id="mtl-opacity-low" name="opacity-low" onclick="toggleMapOpacity()">
+					<label id="mtl-opacity-low-brighter" for="mtl-opacity-low">'.
 						__('brightened map','my-transit-lines').
+					'</label>
+					<label id="mtl-opacity-low-darker" for="mtl-opacity-low">'.
+						__('darkened map','my-transit-lines').
 					'</label>
 				</span>
 			</p>

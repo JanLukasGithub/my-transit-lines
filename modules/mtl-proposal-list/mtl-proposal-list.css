@@ -102,10 +102,6 @@
 	opacity:.4 !important;
 }
 
-:root.dark-theme #content div.mtl-post-tile .background-tilelayer {
-	filter: hue-rotate(180deg) invert(95%);
-}
-
 /* content tiles */
 
 #content .mtl-list-loader {
@@ -248,10 +244,6 @@
 	height: 100%;
 
 	background-color: var(--map-background-color);
-}
-
-:root.dark-theme #content article.mtl-postlist-item .background-tilelayer {
-	filter: hue-rotate(180deg) invert(95%);
 }
 
 .mtl-list-map-link {

@@ -88,7 +88,7 @@ div.ol-rotate {
 	text-align: left;
 }
 
-#mtl-post-form #map-color-opacity label {
+#map-color-opacity label {
 	display: inline;
 }
 
@@ -218,10 +218,6 @@ div.success-message-block {
 #mtl-box #mtl-map {
 	height: 550px;
 	background: var(--map-background-color);
-}
-
-:root.dark-theme #mtl-map :is(.background-tilelayer, .overlay-tilelayer):not(.no-darkmode) {
-	filter: hue-rotate(180deg) invert(95%);
 }
 
 #mtl-map .background-tilelayer {

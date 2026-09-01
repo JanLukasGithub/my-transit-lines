@@ -176,13 +176,17 @@ function mtl_user_settings_output( $atts ) {
 				'</th>
 				<td>
 					<p>
-						<input type="radio" id="system-theme" name="theme" value="system"'.($theme == 'system' || $theme == '' ? 'checked' : '').'><label for="system-theme">'.__('System', 'my-transit-lines').'</label>
-						<input type="radio" id="light-theme" name="theme" value="light"'.($theme == 'light' ? 'checked' : '').'><label for="light-theme">'.__('Light', 'my-transit-lines').'</label>
-						<input type="radio" id="dark-theme" name="theme" value="dark"'.($theme == 'dark' ? 'checked' : '').'><label for="dark-theme">'.__('Dark', 'my-transit-lines').'</label>
+						<input type="radio" id="system-theme" name="theme" value="system"'.($theme == 'system' || $theme == '' ? 'checked' : '').'>
+						<label for="system-theme">'.__('System', 'my-transit-lines').'</label>
+						
+						<input type="radio" id="light-theme" name="theme" value="light"'.($theme == 'light' ? 'checked' : '').'>
+						<label for="light-theme">'.__('Light', 'my-transit-lines').'</label>
+						
+						<input type="radio" id="dark-theme" name="theme" value="dark"'.($theme == 'dark' ? 'checked' : '').'>
+						<label for="dark-theme">'.__('Dark', 'my-transit-lines').'</label>
 					</p>
 				</td>
 			</tr>
-			
 		</tbody></table>
 
 		<p class="aligncenter">
